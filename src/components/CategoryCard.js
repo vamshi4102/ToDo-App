@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
 const CategoryCard = ({category}) => {
+  console.log('category----',category);
   return (
     <View style={[styles.card,{backgroundColor:category.background}]}>
       <Text>{category.name}</Text>

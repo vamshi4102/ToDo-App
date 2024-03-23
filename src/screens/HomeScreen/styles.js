@@ -47,22 +47,34 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     marginTop: -25,
-    paddingHorizontal:25,
-    paddingVertical:25
+    paddingHorizontal: 25,
+    paddingVertical: 25,
   },
-  todo_list:{
-    fontWeight:'bold',
-    fontSize:18
+  todo_list: {
+    fontWeight: 'bold',
+    fontSize: 18,
   },
-  add_todo:{
-
+  add_todo: {},
+  enter_todo: {
+    backgroundColor: '#f3f3f3',
+    width: '100%',
+    height: 40,
+    marginVertical: 10,
+    paddingHorizontal: 10,
   },
-enter_todo:{
-  backgroundColor:'#f3f3f3',
-  height:40,
-  marginVertical:10,
-  paddingHorizontal:10
-},
+  add_todo: {
+    backgroundColor: 'black',
+    width: 100,
+    height: 40,
+    alignSelf: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 25,
+  },
+  add_todo_text: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 });
 
 export default styles;

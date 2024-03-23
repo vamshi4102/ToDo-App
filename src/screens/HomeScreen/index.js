@@ -1,16 +1,75 @@
-import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList, TextInput} from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  ImageBackground,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  TextInput,
+} from 'react-native';
+import React, {useState} from 'react';
 import styles from './styles';
 import ImageSlider from '../../components/ImageSlider';
 import TopBar from '../../components/TopBar';
-import { CategoryData } from '../../assets/Data/CategoryData';
+import {CategoryData} from '../../assets/Data/CategoryData';
 import CategoryCard from '../../components/CategoryCard';
-import { ToDoData } from '../../assets/Data/ToDoList';
+import {ToDoData} from '../../assets/Data/ToDoList';
 import TodoItem from '../../components/TodoItem';
+import AddCategory from '../../components/addCategory';
+import SelectCategory from '../../components/SelectCategory';
 
 const HomeScreen = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  // category related
+  const [CategoryName, setCategoryName] = useState('');
+  const [CategoryColor, setCategoryColor] = useState(null);
+  const [CategoryList, setCategoryList] = useState([]);
+  //todo list
+  const [TodoName, setTodoName] = useState('');
+  const [TodoBackground, setTodoBackground] = useState('');
+  const [TodoCategoryName, setTodoCategoryName] = useState('');
+  const [TodoList, setTodoList] = useState([]);
+  const [ShowSelectCategory, setShowSelectCategory] = useState(false);
+  const SubmitCategory = (name, color) => {
+    let NewCategory = {name: name, background: color};
+    setCategoryList(CategoryList.concat(NewCategory));
+    setCategoryName('');
+    setCategoryColor(null);
+    setModalVisible(false);
+  };
+
+  const OnEnterTodo = todo => {
+    setTodoName(todo);
+    if (todo.length > 2) {
+      setShowSelectCategory(true);
+    } else {
+      setShowSelectCategory(false);
+    }
+  };
+
+  const AddTodoNow = () => {
+    let NewTodo = {
+      name: TodoName,
+      CategoryBackground: TodoBackground,
+      category: TodoCategoryName,
+    };
+    setTodoList(TodoList.concat(NewTodo));
+    setTodoName('');
+    setTodoBackground(null);
+    setTodoCategoryName('');
+    setShowSelectCategory(false);
+  };
   return (
     <>
+      <AddCategory
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        CategoryName={CategoryName}
+        setCategoryName={setCategoryName}
+        CategoryColor={CategoryColor}
+        setCategoryColor={setCategoryColor}
+        SubmitCategory={SubmitCategory}
+      />
       {/* top background */}
       <ImageBackground
         source={{
@@ -21,38 +80,61 @@ const HomeScreen = () => {
           {/* topbar */}
           <TopBar />
         </View>
-      {/* image slider */}
-      <ImageSlider />
-      {/* caterogy list */}
-      <View style={styles.categories}>
-        <View style={styles.categories_row}>
+        {/* image slider */}
+        <ImageSlider />
+        {/* caterogy list */}
+        <View style={styles.categories}>
+          <View style={styles.categories_row}>
             <Text style={styles.categories_heding}>Categories</Text>
-            <TouchableOpacity style={styles.categories_add}>
-                <Text style={styles.categories_add_text}>Add</Text>
+            <TouchableOpacity
+              style={styles.categories_add}
+              onPress={() => setModalVisible(true)}>
+              <Text style={styles.categories_add_text}>Add</Text>
             </TouchableOpacity>
+          </View>
+          <FlatList
+            data={CategoryList}
+            renderItem={({item}) => <CategoryCard category={item} />}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          />
         </View>
-        <FlatList 
-        data={CategoryData}
-        renderItem={({item})=>(<CategoryCard category={item} />)}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        />
-      </View>
       </ImageBackground>
       {/* todo list */}
       <View style={styles.bottom_body}>
         <Text style={styles.todo_list}>To do list</Text>
-        <FlatList
-        data={ToDoData}
-        ListHeaderComponent={()=>(
-            <View style={styles.add_todo}>
-                <TextInput
-                placeholder='Enter Todo' 
-                style={styles.enter_todo}
+        <TextInput
+          placeholder="Enter Todo"
+          style={styles.enter_todo}
+          onChangeText={text => OnEnterTodo(text)}
+          defaultValue={TodoName}
+        />
+
+        {ShowSelectCategory && (
+          <View>
+            <FlatList
+              data={CategoryList}
+              renderItem={({item}) => (
+                <SelectCategory
+                  TodoBackground={TodoBackground}
+                  setTodoBackground={setTodoBackground}
+                  category={item}
+                  TodoCategoryName={TodoCategoryName}
+                  setTodoCategoryName={setTodoCategoryName}
                 />
-            </View>
+              )}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+            <TouchableOpacity onPress={AddTodoNow} style={styles.add_todo}>
+              <Text style={styles.add_todo_text}>Add TODO</Text>
+            </TouchableOpacity>
+          </View>
         )}
-        renderItem={({item})=>(<TodoItem todo={item} />)}
+
+        <FlatList
+          data={TodoList}
+          renderItem={({item}) => <TodoItem todo={item} />}
         />
       </View>
     </>

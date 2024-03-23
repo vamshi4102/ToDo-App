@@ -7,7 +7,7 @@ const TodoItem = ({todo}) => {
       <Text style={styles.todo}>{todo.name}</Text>
       <View
         style={[styles.category, {backgroundColor: todo.CategoryBackground}]}>
-        <Text style={styles.category_text}>{todo.name}</Text>
+        <Text style={styles.category_text}>{todo.category}</Text>
       </View>
     </View>
   );
